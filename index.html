@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Base | Central Tech Hub</title>
+    <style>
+        /* Core Reset & Matrix Theme Variables */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-color: #030703;
+            --card-bg: #081209;
+            --border-color: #113016;
+            --primary-accent: #00ff66;
+            --text-main: #b8e6c1;
+            --text-heading: #ffffff;
+            --text-muted: #5e8f66;
+            --neon-glow: 0 0 10px rgba(0, 255, 102, 0.6), 0 0 20px rgba(0, 255, 102, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 10%;
+            background-color: rgba(8, 18, 9, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+            letter-spacing: 1.5px;
+            text-shadow: var(--neon-glow);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-accent);
+            text-shadow: var(--neon-glow);
+        }
+
+        /* Hamburger Button (Mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-accent);
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 5px var(--primary-accent);
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 250px;
+                background-color: var(--card-bg);
+                border-left: 1px solid var(--border-color);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2.5rem;
+                transition: right 0.3s ease-in-out;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.8);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+            }
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+            .hamburger.active span:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg);
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* --- HERO SECTION WITH EMBEDDED HACKER IMAGE BACKGROUND --- */
+        .hero {
+            position: relative;
+            padding: 9rem 2rem;
+            text-align: center;
+            /* Combines a dark matrix gradient overlay with your uploaded hacker image data */
+            background-image: linear-gradient(rgba(3, 7, 3, 0.82), rgba(3, 7, 3, 0.92)), url('data:image/jpeg;base64,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/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/ABo/tq1/6Ct7/wCE03+NV/sw/wCeMf8A3yKPsw/54x/98igWLP8AbVr/ANBW9/8ACeb/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DNGHR1PUEHgisK8HKPu7mkHqrn5a+N/F2r+NfE19ruuXb3N7dyb2JOAo7Ko6KoAwAOABXPU+YYnl/3jTa5TqCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiio7mJpbSVE++ykD8q5+JJyo5XVq02rqLsvkk7fM1wsI1K0Kcno2k/mzk/iN4+sPA2mR20MSXmuXibLKzHUknbvc87UHvwTxg4OPh7Xb7xZf3Gs+JdUv728ugC4vJ2Yv67M8LgjhUAXrgdTVjXrjXvGOv6jrOqyXV1fzZmuJWJ2opOMZ7KoxgdB0Fdl8Ovgl4n8W3UF1qFrLpejiUPJPcAxzSpx/AKR9D0HftXlYTCU5e9JWv93m9L2Xb8b/ABfTZlj6qapQlaO3nLzfl5fjf8Fngnxu8V+ItN1i2S1sLO6uYpY7V8SSKjLtEmdxByO2M9QetfW3g3wB4c8I2cCWem21zfiIH7fcwI8zPjLckdMn7vT0rY0jwj4e0Swa00vRLKzhP3lhgC59zxkn3PNdBX1NCkocrqSTl/JFWj6/O//Dnh4jEubUIaRXXq/wDI8B+PXwyk12OPxb4dsZLjWLdPLvbWFDl4hx5oXuVOdw7jnuQfnHS7TUrzUbaz022ubm8uJEhhgt0LvIzHACqOua/RyuL8JfCfwT4M1qfVtB0T7Pfys58x5ml2BjuKoGJCDOD8uOgrkxWEVSpzU52fVbv5/gddDEezpuMUmv61X5P7z578ZfCzX/AIbeDfC+t322LUr6a5jvLY8tbxybFt0f1ZioyO27HY16P+ybod82q614gkhlXT5Lf7HHMwwJX3qW2+oXAyexI96+h7vTrK/nspfsuS2sW8f2S7i8zY33W46EeteV6p8XvAml+N73wfM0z6pbK8cgttP8uHzFXcVHGH467QevHqa4IUXCjKhVna7Vnba23Xo3t3PRlW9pUjVpQvpqru99fvXfbod1r93qNjpFzcaTpE2q30aZhsoZEjaVuuAx4GMfTrXxj8SfiJ4s8fa5M+rT3tvbQzt9n07zW8i2+bCrt6EgcbuT2r7T8PeMPCniizS60PWbG8jdNwRJgJFz/eQ4ZT7EV89/tAeBLnwh4u/t3T7Xy9I1V2laSJOLe4J3MrY6BslgffnrivQwU1CpKnL4pW1XZbr+l3OPEuVSkqkVpG6dn36/qfNV3HdWtzJDcwzQ3EZ2ujqVZSOoIPTFfc3wX0XUfD3wx0TTdWt3t71IZGeJvvJuYsAfcZwa80/Z78C2vjXW5fEGt2u7SNMf93C6/u7m467T6ooyT7lfevsGvo8pwrpxdV/Em0vTv+X33PHzaqpThRjuldr02/z+5eYUUUV9Cj5wKKKKACiiigD//2Q==' );
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--text-heading);
+            margin-bottom: 1rem;
+            text-shadow: var(--neon-glow);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            max-width: 650px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background-color: transparent;
+            color: var(--primary-accent);
+            text-decoration: none;
+            font-weight: 700;
+            border: 2px solid var(--primary-accent);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            box-shadow: var(--neon-glow);
+        }
+
+        .cta-btn:hover {
+            background-color: var(--primary-accent);
+            color: #030703;
+            box-shadow: 0 0 15px var(--primary-accent), 0 0 30px var(--primary-accent);
+            transform: translateY(-2px);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 2rem;
+            color: var(--text-heading);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Projects Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-accent);
+            box-shadow: var(--neon-glow);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 180px;
+            background-color: #030703;
+            border-bottom: 1px solid var(--border-color);
+            display: block;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-body h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title-link {
+            color: var(--text-heading);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .card-title-link:hover {
+            color: var(--primary-accent);
+        }
+
+        .card-body p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .project-link {
+            color: var(--primary-accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .project-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            margin-bottom: 5rem;
+        }
+
+        .contact-form {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2.5rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-heading);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--primary-accent);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: transparent;
+            color: var(--primary-accent);
+            border: 2px solid var(--primary-accent);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--neon-glow);
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-accent);
+            color: #030703;
+            box-shadow: 0 0 15px var(--primary-accent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav>
+        <div class="logo-container">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="32" height="32" rx="6" fill="#081209" stroke="#00ff66" stroke-width="2"/>
+                <path d="M8 22L16 10L24 22H19L16 17.5L13 22H8Z" fill="#00ff66"/>
+            </svg>
+            <div class="logo-text">MY BASE</div>
+        </div>
+
+        <button class="hamburger" id="hamburger-btn" aria-label="Toggle Navigation Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="nav-links" id="nav-menu">
+            <li><a href="#about" class="nav-item">About</a></li>
+            <li><a href="#projects" class="nav-item">Projects</a></li>
+            <li><a href="#contact" class="nav-item">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Welcome to My Base</h1>
+        <p>A centralized digital workspace and technical repository built for system architecture, web development, and security infrastructure.</p>
+        <a href="#projects" class="cta-btn">Explore Work</a>
+    </section>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        
+        <!-- About Section -->
+        <section id="about" style="margin-bottom: 5rem;">
+            <h2 class="section-title">About My Base</h2>
+            <p>My Base serves as the primary hub housing technical documentation, project modules, and live development setups. Built with a low-overhead design focused on security, speed, and clean code.</p>
+        </section>
+
+        <!-- Projects Grid Section -->
+        <section id="projects">
+            <h2 class="section-title">Core Modules</h2>
+            <div class="grid">
+                
+                <div class="card">
+                    <svg class="card-img" viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#030703"/>
+                        <circle cx="200" cy="90" r="70" fill="#081209" stroke="#113016" stroke-width="2"/>
+                        <path d="M200 45 L235 62 V97 C235 123 200 135 200 135 C200 135 165 123 165 97 V62 Z" fill="none" stroke="#00ff66" stroke-width="3"/>
+                        <path d="M192 88 L198 94 L210 81" fill="none" stroke="#00ff66" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                    <div class="card-body">
+                        <h3><a href="https://github.com" target="_blank" class="card-title-link">System Security Hardening</a></h3>
+                        <p>Security auditing configurations, bootloader password enforcement, and Linux user access controls.</p>
+                        <a href="https://github.com" target="_blank" class="project-link">View Repository &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-img" viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#030703"/>
+                        <circle cx="200" cy="90" r="70" fill="#081209" stroke="#113016" stroke-width="2"/>
+                        <rect x="130" y="55" width="140" height="70" rx="5" fill="none" stroke="#00ff66" stroke-width="3"/>
+                        <path d="M150 78 L162 90 L150 102" fill="none" stroke="#00ff66" stroke-width="3" stroke-linecap="round"/>
+                        <line x1="170" y1="102" x2="185" y2="102" stroke="#00ff66" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                    <div class="card-body">
+                        <h3><a href="https://github.com" target="_blank" class="card-title-link">Web Engineering Hub</a></h3>
+                        <p>Custom HTML5/CSS3 interface frameworks, responsive grids, and clean component systems.</p>
+                        <a href="https://github.com" target="_blank" class="project-link">View Live Demo &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <svg class="card-img" viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100%" height="100%" fill="#030703"/>
+                        <circle cx="200" cy="90" r="70" fill="#081209" stroke="#113016" stroke-width="2"/>
+                        <circle cx="165" cy="90" r="14" fill="none" stroke="#00ff66" stroke-width="3"/>
+                        <circle cx="235" cy="65" r="14" fill="none" stroke="#00ff66" stroke-width="3"/>
+                        <circle cx="235" cy="115" r="14" fill="none" stroke="#00ff66" stroke-width="3"/>
+                        <line x1="179" y1="90" x2="221" y2="65" stroke="#00ff66" stroke-width="2" stroke-dasharray="4"/>
+                        <line x1="179" y1="90" x2="221" y2="115" stroke="#00ff66" stroke-width="2" stroke-dasharray="4"/>
+                    </svg>
+                    <div class="card-body">
+                        <h3><a href="https://github.com" target="_blank" class="card-title-link">Network Utilities</a></h3>
+                        <p>Subnet masking calculators, IP address allocation models, and structural topology layouts.</p>
+                        <a href="https://github.com" target="_blank" class="project-link">View Documentation &rarr;</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <h2 class="section-title">Get in Touch</h2>
+            <form action="https://formsubmit.co/your-email@example.com" method="POST" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 My Base. All rights reserved.</p>
+    </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const navMenu = document.getElementById('nav-menu');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                hamburgerBtn.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
